@@ -11,7 +11,7 @@ public class EnemyPaddle {
     public EnemyPaddle(){
 
         upAccel= false; downAccel= false;
-        ypos= 210; yVel= 0;
+        ypos= 210; yVel= 2;
         xpos= 40;
         rec= new Rectangle(xpos, (int) ypos, 20, 80);
     }
@@ -23,7 +23,14 @@ public class EnemyPaddle {
     }
 
     public void move(Ball ball){
-        ypos= ball.ypos-40;
+
+        if(ball.ypos<ypos+40){
+            ypos -= 3.3;
+        }
+        else if(ball.ypos>ypos+40){
+            ypos += 3.3;
+
+        }
 
         if(ypos < 0){
             ypos= 0;
