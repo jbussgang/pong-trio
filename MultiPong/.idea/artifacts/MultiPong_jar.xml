@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MultiPong:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MultiPong_jar</output-path>
+    <root id="archive" name="MultiPong.jar">
+      <element id="module-output" name="MultiPong" />
+    </root>
+  </artifact>
+</component>

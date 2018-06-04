@@ -6,10 +6,8 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.net.*;
 
-public class PongSolo implements Runnable, KeyListener{
+public class MultiPong implements Runnable, KeyListener{
 
     final int WIDTH = 700;
     final int HEIGHT = 500;
@@ -21,17 +19,16 @@ public class PongSolo implements Runnable, KeyListener{
     public boolean gameStarted = false;
     public int p1Score = 0, p2Score = 0;
 
-    private Paddle myPaddle;
-    private EnemyPaddle oppPaddle;
+    private Paddle p1, p2;
     private Ball b1;
 
     public static void main(String[] args){
-        PongSolo ex = new PongSolo();
+        MultiPong ex = new MultiPong();
         new Thread(ex).start();
 
     }
 
-    public PongSolo() {
+    public MultiPong(){
         panel = (JPanel) frame.getContentPane();
 
         panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -54,19 +51,20 @@ public class PongSolo implements Runnable, KeyListener{
 
         canvas.requestFocus();
 
-        myPaddle= new Paddle();
-        oppPaddle= new EnemyPaddle();
+        p1 = new Paddle(1);
+        p2 = new Paddle(2);
 
         b1 = new Ball();
+
     }// BasicGameApp()
 
     public void moveEverything() {
-        myPaddle.move();
-        oppPaddle.move(b1);
+        p1.move();
+        p2.move();
 
         if (gameStarted) {
             b1.move();
-            b1.checkPaddleCollision(myPaddle, oppPaddle);
+            b1.checkPaddleCollision(p1, p2);
         }
     }
 
@@ -79,7 +77,7 @@ public class PongSolo implements Runnable, KeyListener{
             moveEverything();
             //sleep
             try {
-                Thread.sleep(7);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
 
             }
@@ -87,7 +85,7 @@ public class PongSolo implements Runnable, KeyListener{
     }
 
     //paints things on the screen using bufferStrategy
-    private void render(){
+    private void render() {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
         g.setColor(Color.black);
@@ -112,17 +110,19 @@ public class PongSolo implements Runnable, KeyListener{
                 p1Score++;
                 b1.xpos = 350;
                 b1.ypos = 250;
-                myPaddle.ypos = 210;
+                p1.ypos = 210;
+                p2.ypos = 210;
             }
             if (b1.xpos > 710) {
                 gameStarted = false;
                 p2Score++;
                 b1.xpos = 350;
                 b1.ypos = 250;
-                myPaddle.ypos = 210;
+                p1.ypos = 210;
+                p2.ypos = 210;
             } else {
-                myPaddle.draw(g);
-                oppPaddle.draw(g);
+                p1.draw(g);
+                p2.draw(g);
                 b1.draw(g);
             }
         }
@@ -135,9 +135,15 @@ public class PongSolo implements Runnable, KeyListener{
     // REQUIRED KEYBOARD METHODS
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            myPaddle.setUpAccel(true);
+            p1.setUpAccel(true);
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            myPaddle.setDownAccel(true);
+            p1.setDownAccel(true);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            p2.setUpAccel(true);
+        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            p2.setDownAccel(true);
         }
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -148,9 +154,15 @@ public class PongSolo implements Runnable, KeyListener{
 
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            myPaddle.setUpAccel(false);
+            p1.setUpAccel(false);
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            myPaddle.setDownAccel(false);
+            p1.setDownAccel(false);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            p2.setUpAccel(false);
+        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            p2.setDownAccel(false);
         }
     }
 
